@@ -11,6 +11,8 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.repository.UserRepository;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -56,5 +58,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean existsById(Long id) {
         return storage.existsById(id);
+    }
+
+    @Override
+    public List<UserDto> getUsers() {
+        return storage.getAll().stream().map(UserMapper::toUserDto).toList();
     }
 }

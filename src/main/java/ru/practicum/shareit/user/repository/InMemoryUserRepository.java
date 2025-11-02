@@ -4,6 +4,7 @@ import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -43,5 +44,10 @@ public class InMemoryUserRepository implements UserRepository {
     @Override
     public boolean existsByEmail(String email) {
         return !users.values().stream().filter(it -> it.getEmail().equals(email)).toList().isEmpty();
+    }
+
+    @Override
+    public List<User> getAll() {
+        return users.values().stream().toList();
     }
 }

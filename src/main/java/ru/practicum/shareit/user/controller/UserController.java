@@ -9,6 +9,8 @@ import ru.practicum.shareit.user.dto.UpdateUserRequest;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/users")
 @RequiredArgsConstructor
@@ -34,5 +36,10 @@ public class UserController {
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
+    }
+
+    @GetMapping
+    public List<UserDto> getUsers() {
+        return userService.getUsers();
     }
 }
