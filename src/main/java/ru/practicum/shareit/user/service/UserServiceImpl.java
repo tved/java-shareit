@@ -30,11 +30,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(Long id, UpdateUserRequest request) {
-        if (storage.existsByEmail(request.getEmail())) {
-            throw new ConflictException("Email is already in use");
-        }
         User existing = storage.get(id)
                 .orElseThrow(() -> new NotFoundException("User with id=" + id + " not found"));
+        String newEmail = request.getEmail();
+        if (newEmail != null && !newEmail.equals(existing.getEmail())) {
+            if (storage.existsByEmail(newEmail)) {
+                throw new ConflictException("Email is already in use");
+            }
+        }
         User updated = UserMapper.updateUser(existing, request);
         storage.update(updated);
         return UserMapper.toUserDto(updated);

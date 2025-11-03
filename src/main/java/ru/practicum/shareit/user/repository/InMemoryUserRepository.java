@@ -43,7 +43,13 @@ public class InMemoryUserRepository implements UserRepository {
 
     @Override
     public boolean existsByEmail(String email) {
-        return !users.values().stream().filter(it -> it.getEmail().equals(email)).toList().isEmpty();
+        if (email == null) {
+            return false;
+        }
+        return users.values()
+                .stream()
+                .map(User::getEmail)
+                .anyMatch(email::equals);
     }
 
     @Override
