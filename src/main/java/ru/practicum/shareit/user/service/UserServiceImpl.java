@@ -16,36 +16,36 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UserRepository storage;
+    private final UserRepository repository;
 
     @Override
     public UserDto createUser(CreateUserRequest request) {
-        if (storage.existsByEmail(request.getEmail())) {
+        if (repository.existsByEmail(request.getEmail())) {
             throw new ConflictException("Email is already in use");
         }
         User newUser = UserMapper.toUser(request);
-        newUser = storage.create(newUser);
+        newUser = repository.save(newUser);
         return UserMapper.toUserDto(newUser);
     }
 
     @Override
     public UserDto updateUser(Long id, UpdateUserRequest request) {
-        User existing = storage.get(id)
+        User existing = repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User with id=" + id + " not found"));
         String newEmail = request.getEmail();
         if (newEmail != null && !newEmail.equals(existing.getEmail())) {
-            if (storage.existsByEmail(newEmail)) {
+            if (repository.existsByEmail(newEmail)) {
                 throw new ConflictException("Email is already in use");
             }
         }
         User updated = UserMapper.updateUser(existing, request);
-        storage.update(updated);
+        repository.save(updated);
         return UserMapper.toUserDto(updated);
     }
 
     @Override
     public UserDto getUserById(Long id) {
-        User user = storage.get(id)
+        User user = repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User with id=" + id + " not found"));
         return UserMapper.toUserDto(user);
     }
@@ -55,16 +55,16 @@ public class UserServiceImpl implements UserService {
         if (!existsById(id)) {
             throw new NotFoundException("User with id=" + id + " not found");
         }
-        storage.delete(id);
+        repository.deleteById(id);
     }
 
     @Override
     public boolean existsById(Long id) {
-        return storage.existsById(id);
+        return repository.existsById(id);
     }
 
     @Override
     public List<UserDto> getUsers() {
-        return storage.getAll().stream().map(UserMapper::toUserDto).toList();
+        return repository.findAll().stream().map(UserMapper::toUserDto).toList();
     }
 }

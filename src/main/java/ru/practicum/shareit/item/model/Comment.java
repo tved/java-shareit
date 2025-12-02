@@ -1,38 +1,37 @@
 package ru.practicum.shareit.item.model;
 
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
+import java.time.Instant;
+
 @Entity
-@Table(name = "items")
+@Table(name = "comments")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class Item {
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false)
-    private String description;
-
-    @Column(nullable = false)
-    private Boolean available;
+    private String text;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id", nullable = false)
-    private User owner;
+    @JoinColumn(name = "item_id", nullable = false)
+    private Item item;
 
     @ManyToOne
-    @JoinColumn(name = "request_id")
-    private ItemRequest request;
+    @JoinColumn(name = "author_id", nullable = false)
+    private User author;
+
+    @Column(name = "created")
+    private Instant createdAt = Instant.now();
 }

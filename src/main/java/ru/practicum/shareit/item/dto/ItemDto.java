@@ -5,4 +5,4 @@ public record ItemDto(
     String name,
     String description,
     Boolean available
-){}
+) {}
