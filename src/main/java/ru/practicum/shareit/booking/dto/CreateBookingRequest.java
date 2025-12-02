@@ -22,7 +22,7 @@ public class CreateBookingRequest {
     LocalDateTime end;
 
     @AssertTrue(message = "Start date must be earlier than end date")
-    public boolean areDatesValid() {
+    public boolean isStartBeforeEnd() {
         if (start == null || end == null) {
             return true;
         }
